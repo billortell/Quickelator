@@ -1,11 +1,22 @@
 <?php
-/** implementer */
+/**
+ * allowing for other modules/helpers to be created to 'extend' the functionality
+ * of the available CalcXXXXXX options ;) (ie, Exponentiate, Log, NPower, etc...),
+ * thus any/all CalcXXXXXX options/modules would have to implement this class -
+ * with at least a formula
+ * ------------------------------------------------------------------------------
+ */
 interface iCalc
 {
 	/** yes, yes, i know - overboard, but in lieu of using a framework / allowing a forced implementation */
 	function applyformula();
 }
 
+/***
+ * used only for quick validation of the 'first/second' values
+ * within the CalcFactory [below]
+ * ------------------------------------------------------------------------------
+ */
 class CalcValidation
 {
 	/**
@@ -40,6 +51,11 @@ class CalcValidation
 }
 
 
+/**
+ * This will be used as a quick class of extending, any/all modules
+ * (ie, Divide, Multiply, etc...) must extend this class.
+ * ------------------------------------------------------------------------------
+ */
 class CalcSetup
 {
 	protected $first;
@@ -113,6 +129,9 @@ class CalcSetup
 		return $result;
 	}
 
+	/***
+	 * @return array containing errors if any and answer (or text if that's the answer)
+	 */
 	public function getAnswer()
 	{
 		$arr['errors']=$this->getErrors(); // found in the operational-class
@@ -126,12 +145,6 @@ class CalcSetup
 
 class CalcAdd extends CalcSetup implements iCalc
 {
-	/***
-	 * where the 'magic' happens :)
-	 * separatoin of the equation from the calcAnswer was just a way to
-	 * separate the final calcAnswer()
-	 * @return float
-	 */
 	public function applyformula(){
 		$a = array( $this->getFirst(), $this->getSecond() );
 		return array_sum( $a );
@@ -165,12 +178,6 @@ class CalcSubtract extends CalcSetup implements iCalc
  */
 class CalcMultiply extends CalcSetup implements iCalc
 {
-	/***
-	 * where the 'magic' happens :)
-	 * separatoin of the equation from the calcAnswer was just a way to
-	 * separate the final calcAnswer()
-	 * @return float
-	 */
 	public function applyformula(){
 		$a = array( $this->getFirst(), $this->getSecond() );
 		return array_product( $a );
@@ -201,13 +208,6 @@ class CalcDivide extends CalcSetup implements iCalc
 		return $this;
 	}
 
-
-	/***
-	 * where the 'magic' happens :)
-	 * separatoin of the equation from the calcAnswer was just a way to
-	 * separate the final calcAnswer()
-	 * @return float
-	 */
 	public function applyformula(){
 		return $this->getFirst() / $this->getSecond() ;
 	}
