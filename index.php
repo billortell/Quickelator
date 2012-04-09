@@ -7,6 +7,7 @@ error_reporting(2);
 
 define("CLASS_DIR","helpers");
 define("VIEWS_DIR","views");
+define("SITE_TITLE","Quickelator");
 
 function __autoload($class_name) {
 	$class_file=".".DIRECTORY_SEPARATOR.CLASS_DIR.DIRECTORY_SEPARATOR.$class_name . '.class.php';
