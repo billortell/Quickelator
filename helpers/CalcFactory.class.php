@@ -42,10 +42,13 @@ class CalcValidation
 		/** again, offering forgiveness for that xtra space */
 		$d = str_replace(array(","," "),"",$d."");
 
-		/** trick to make it float */
-		$d = $d + 0;
-		
-		return $d;
+		if ( is_numeric($d) )
+		{
+			$d = $d + 0;
+			return $d;
+		}
+
+		return null;
 	}
 
 }
@@ -230,6 +233,62 @@ class CalcDivide extends CalcSetup implements iCalc
 
 }
 
+class CalcHistory
+{
+	protected $h;
+	protected $sess_var;
+	public $sess_qty;
+
+	function __construct()
+	{
+		$this->sess_qty = 3;
+		$this->sess_var = "qh";
+		return $this->getHistory();
+	}
+
+	public function getHistory()
+	{
+		$t = $_SESSION[$this->sess_var]; // prefably json encoded already
+		if ( !empty($t) )
+		{
+			$this->h = json_decode( $t );
+			return $this->h; // array'd out ;)
+		}
+		return array();
+	}
+
+	protected function shaveHistory()
+	{
+		if ( count($this->h) > $this->sess_qty )
+		{
+			$localHistory = $this->h;
+			array_pop($localHistory);
+			$this->h = $localHistory;
+		}
+		return $this->h;
+	}
+
+	public function storeHistory($str=null)
+	{
+		$localHistory = $this->getHistory();
+		if ( empty($localHistory) )
+			$t = array();
+		else
+			$t = $localHistory;
+
+
+		array_unshift($t, $str);
+		$this->h = $t;
+		$this->shaveHistory();
+
+		$_SESSION[$this->sess_var] = json_encode($this->h); // prefably json encoded already
+
+		return $this->h;
+	}
+
+
+}
+
 /** do it! */
 class CalcFactory
 {
@@ -318,14 +377,32 @@ class CalcFactory
 			catch (Exception $e)
 			{
 				$arr['errors']=$this->getErrors();
-				$arr['answer']="Hmm, something went wrong, please try again. <br/>(message: ".$e->getMessage().")";
+				$arr['answer']="Hmm, something went wrong, please try again";
 			}
 
 		}
 
 		$arr['input']=array();
 		$arr['input']['first'] = $this->getFirst();
+		$arr['input']['operation'] = $_POST['operation'];
 		$arr['input']['second'] = $this->getSecond();
+
+
+
+		/***
+		 * some fun? oh why not :)
+		 */
+		if ( empty($arr['errors']) )
+		{
+			global $operations;
+			$sess_storage['str'] = $arr['input']['first'] . " " . $operations[$_POST['operation']] . " " .$arr['input']['second']." is:";
+			$sess_storage['ans'] = $arr['answer'];
+			$sess_storage['time'] = time();
+
+			$calc = new CalcHistory();
+			$calc->storeHistory($sess_storage);
+
+		}
 
 		if ( $j=='json' )
 		{
@@ -335,6 +412,5 @@ class CalcFactory
 		
 		return $arr;
 	}
-
 
 }

@@ -26,6 +26,16 @@
             margin-top: 0px;
             padding-top: 0px;
         }
+        #history p span
+        {
+            font-size: 80%;
+            color: #cccccc;
+        }
+        #history p
+        {
+            font-size: 80%;
+            color: #333;
+        }
     </style>
 </head>
 <body>
@@ -36,9 +46,6 @@
 <?php if ( !empty($answers['errors']) ){ ?>
 <!-- errors, uh oh! -->
 <div id=errors>
-    <p>
-        Somemthing isn't quite right.
-    </p>
     <ul>
     <?php  foreach ( $answers['errors'] as $error ) { ?>
         <li class=error><?php echo $error;?></li>
@@ -79,6 +86,17 @@
     </p>
 </form>
 
+
+<div id=history>
+    <p>Your past quickelations...</p>
+    <?php if ( !empty($history) ) { foreach ($history as $ce){ ?>
+    <p>
+        <?php echo $ce->str;?><br/>
+        <strong><?php echo $ce->ans;?></strong><br/>
+        <span>(quickelated about <?php echo time() - $ce->time ;?> seconds ago)</span>
+    </p>
+    <?php } } ?>
+</div>
 
 </body>
 </html>
