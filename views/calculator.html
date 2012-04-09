@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>the Quickenlator</title>
+    <style type="text/css">
+        form label
+        {
+            display:block;
+        }
+        div#errors
+        {
+            color: red;
+        }
+        div#answer
+        {
+            color: green;
+        }
+        body
+        {
+            width: 400px;
+            margin: 20px auto;
+        }
+        body h2
+        {
+            margin-top: 0px;
+            padding-top: 0px;
+        }
+    </style>
+</head>
+<body>
+
+<p>the Quickenlator</p>
+
+
+<?php if ( !empty($answers['errors']) ){ ?>
+<!-- errors, uh oh! -->
+<div id=errors>
+    <p>
+        Somemthing isn't quite right.
+    </p>
+    <ul>
+    <?php  foreach ( $answers['errors'] as $error ) { ?>
+        <li class=error><?php echo $error;?></li>
+    <?php } ?>
+    </ul>
+</div>
+<?php } else { ?>
+<!-- whew! at least i have answer -->
+<div id=answer>
+    <span><?php echo $answers['input']['first'] . " " . $operations[$_POST['operation']] . " " .$answers['input']['second']." is: ";?></span><br/>
+    <h2>
+        <?php echo $answers['answer'];?>
+    </h2>
+</div>
+<?php } ?>
+
+
+<!-- gimme your best shot -->
+<form action="" method='post'>
+    <p>
+        <label for="first">First Value</label>
+        <input type="text" name="first" required placeholder="10" value='<?php echo $answers['input']['first'];?>'/>
+    </p>
+
+    <p>
+        <label for="first">Operation</label>
+        <?php foreach ($operations as $operation => $oText) { ?>
+        <input type="radio" name="operation" value="<?php echo $operation;?>" <?php echo ($_POST['operation']==$operation)?"checked=checked":"";?> /><?php echo $oText;?><br>
+        <?php } ?>
+    </p>
+    <p>
+        <label for="second">Second Value</label>
+        <input type="text" name="second" required placeholder="5" value='<?php echo $answers['input']['second'];?>' />
+    </p>
+
+    <p>
+        <input type="submit" value="Calculate" />
+    </p>
+</form>
+
+
+</body>
+</html>
