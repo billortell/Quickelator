@@ -145,6 +145,11 @@ class CalcSetup
 
 class CalcAdd extends CalcSetup implements iCalc
 {
+	public function __construct($first,$second)
+	{
+		parent::__construct($first,$second);
+	}
+
 	public function applyformula(){
 		$a = array( $this->getFirst(), $this->getSecond() );
 		return array_sum( $a );
@@ -159,6 +164,11 @@ class CalcAdd extends CalcSetup implements iCalc
  */
 class CalcSubtract extends CalcSetup implements iCalc
 {
+	public function __construct($first,$second)
+	{
+		parent::__construct($first,$second);
+	}
+
 	/***
 	 * where the 'magic' happens :)
 	 * separatoin of the equation from the calcAnswer was just a way to
@@ -178,6 +188,11 @@ class CalcSubtract extends CalcSetup implements iCalc
  */
 class CalcMultiply extends CalcSetup implements iCalc
 {
+	public function __construct($first,$second)
+	{
+		parent::__construct($first,$second);
+	}
+
 	public function applyformula(){
 		$a = array( $this->getFirst(), $this->getSecond() );
 		return array_product( $a );
